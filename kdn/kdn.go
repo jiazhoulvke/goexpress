@@ -176,6 +176,8 @@ func (t TracesResponse) IsSuccess() bool {
 //LogisticsStatus 运单状态
 func (t TracesResponse) LogisticsStatus() string {
 	switch t.State {
+	case "1":
+		return goexpress.LogisticsStatusCollected
 	case "2":
 		return goexpress.LogisticsStatusShipping
 	case "3":

@@ -43,7 +43,7 @@ const (
 )
 
 //APIURLTraces 物流轨迹即时查询接口地址
-var APIURLTraces = "http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx" //正式地址
+var APIURLTraces = "https://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx" //正式地址
 // var APIURLTraces = "http://sandboxapi.kdniao.cc:8080/kdniaosandbox/gateway/exterfaceInvoke.json" //测试地址
 
 var (
@@ -63,11 +63,11 @@ func Init(c Config) error {
 }
 
 //Traces 获取运单物流轨迹
-func Traces(shipperCode, logisticCode, orderCode string) (TracesResponse, error) {
+func Traces(shipperCode, logisticCode, orderCode string, customerName string) (TracesResponse, error) {
 	if !inited {
 		return TracesResponse{}, fmt.Errorf("配置尚未初始化")
 	}
-	return defautKDN.Traces(shipperCode, logisticCode, orderCode)
+	return defautKDN.Traces(shipperCode, logisticCode, orderCode, customerName)
 }
 
 //KDN 快递鸟
@@ -76,7 +76,7 @@ type KDN struct {
 }
 
 //Traces 获取运单物流轨迹
-func (k *KDN) Traces(shipperCode, logisticCode, orderCode string) (TracesResponse, error) {
+func (k *KDN) Traces(shipperCode, logisticCode, orderCode string, customerName string) (TracesResponse, error) {
 	var tracesResponse TracesResponse
 	if shipperCode == "" {
 		return tracesResponse, fmt.Errorf("快递公司编码不能为空")
@@ -88,6 +88,7 @@ func (k *KDN) Traces(shipperCode, logisticCode, orderCode string) (TracesRespons
 		LogisticCode: logisticCode,
 		OrderCode:    orderCode,
 		ShipperCode:  shipperCode,
+		CustomerName: customerName,
 	}
 	jsonData, err := json.Marshal(reqData)
 	if err != nil {
@@ -132,6 +133,7 @@ type TracesRequestData struct {
 	// OrderCode    string `json:"OrderCode,omitempty"`
 	ShipperCode  string `json:"ShipperCode"`
 	LogisticCode string `json:"LogisticCode"`
+	CustomerName string `json:"CustomerName"`
 }
 
 //Trace 物流轨迹信息
